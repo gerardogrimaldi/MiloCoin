@@ -33,11 +33,37 @@ class BlockChain {
         console.log(newBlock.hash);
         this.chain.push(newBlock)
     }
+
+    isChainValid() {
+      for(let i = 1; i < this.chain.length; i++) {
+        const currentBlock = this.chain[i];
+        const previousBlock = this.chain[i - 1];
+
+        if (currentBlock.hash !== currentBlock.calculateHash()) {
+          return false;
+        }
+
+        if (currentBlock.previousHash !== previousBlock.hash) {
+          return false;
+        }
+      }
+
+      return true;
+
+    }
 }
 
-let miloCoin = new BlockChain();
+let savjeeCoin = new Blockchain();
+savjeeCoin.addBlock(new Block(1, "20/07/2017", { amount: 4 }));
+savjeeCoin.addBlock(new Block(2, "20/07/2017", { amount: 8 }));
 
-miloCoin.addBlock(new Block(1, '10/07/2017', {amount: 4}));
-miloCoin.addBlock(new Block(2, '12/07/2017', {amount: 10}));
 
-console.log(JSON.stringify(miloCoin, null, 2));
+console.log('Blockchain valid? ' + savjeeCoin.isChainValid());
+
+console.log('Changing a block...');
+savjeeCoin.chain[1].data = { amount: 100 };
+// savjeeCoin.chain[1].hash = savjeeCoin.chain[1].calculateHash();
+
+console.log("Blockchain valid? " + savjeeCoin.isChainValid());
+
+// console.log(JSON.stringify(savjeeCoin, null, 4));
